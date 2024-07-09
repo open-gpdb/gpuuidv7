@@ -2,6 +2,7 @@ create extension pguuidv7;
 
 then: 
 
+```
 reshke=# select uuidv7();
                 uuidv7
 --------------------------------------
@@ -25,3 +26,5 @@ reshke=# select uuidv7();
 --------------------------------------
  019096b3-bcc6-727d-b2ad-1a33759ddb37
 (1 row)
+
+```
