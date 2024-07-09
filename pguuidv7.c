@@ -29,40 +29,6 @@ typedef struct pg_uuid_t_v7
 
 
 
-bool
-pg_strong_random(void *buf, size_t len)
-{
-	int			i;
-
-	/*
-	 * Check that OpenSSL's CSPRNG has been sufficiently seeded, and if not
-	 * add more seed data using RAND_poll().  With some older versions of
-	 * OpenSSL, it may be necessary to call RAND_poll() a number of times.  If
-	 * RAND_poll() fails to generate seed data within the given amount of
-	 * retries, subsequent RAND_bytes() calls will fail, but we allow that to
-	 * happen to let pg_strong_random() callers handle that with appropriate
-	 * error handling.
-	 */
-#define NUM_RAND_POLL_RETRIES 8
-
-	for (i = 0; i < NUM_RAND_POLL_RETRIES; i++)
-	{
-		if (RAND_status() == 1)
-		{
-			/* The CSPRNG is sufficiently seeded */
-			break;
-		}
-
-		RAND_poll();
-	}
-
-	if (RAND_bytes(buf, len) == 1)
-		return true;
-	return false;
-}
-
-
-
 /*
  * Generate UUID version 7.
  *
